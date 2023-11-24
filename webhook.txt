@@ -1,0 +1,190 @@
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class DogShow {
+    static final int MAXIMO_PERROS = 500;
+
+    static class Perro {
+        String nombre;
+        String raza;
+        int edad;
+        int puntos;
+    }
+
+    static Queue<String> comandos = new LinkedList<>(); 
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Perro[] perros = new Perro[MAXIMO_PERROS];
+        int cantidad_Perros = 0;
+        int opcion;
+
+
+        Thread servicioExterno = new Thread(() -> {
+            while (true) {
+
+                String comando = obtenerComandoDesdeWebhook();
+                if (comando != null && !comando.isEmpty()) {
+                    comandos.add(comando);
+                }
+
+                try {
+
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        servicioExterno.start(); 
+
+        do {
+            mostrarMenu();
+
+            while (!comandos.isEmpty()) {
+                String comando = comandos.poll();
+                procesarComando(comando, perros, cantidad_Perros);
+            }
+
+            opcion = scanner.nextInt();
+            clearScreen();
+
+            switch (opcion) {
+                case 1:
+                    mostrarListaPorRaza(perros, cantidad_Perros);
+                    break;
+
+                case 2:
+                    mostrarListaPorPuntos(perros, cantidad_Perros);
+                    break;
+
+                case 3:
+                    mostrarListaPorEdad(perros, cantidad_Perros);
+                    break;
+
+                case 4:
+                    mostrarInformacionPerro(scanner, perros, cantidad_Perros);
+                    break;
+
+                case 5:
+                    registrarNuevoPerro(scanner, perros, cantidad_Perros);
+                    break;
+
+                case 6:
+                    localizarPerroPorNombre(scanner, perros, cantidad_Perros);
+                    break;
+
+                case 7:
+                    buscarPerroGanador(perros, cantidad_Perros);
+                    break;
+
+                case 8:
+                    buscarPerroMenorPuntaje(perros, cantidad_Perros);
+                    break;
+
+                case 9:
+                    buscarPerroMasViejo(perros, cantidad_Perros);
+                    break;
+
+                case 0:
+                    System.out.println("Saliendo del programa");
+                    break;
+
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+
+            System.out.println();
+
+        } while (opcion != 0);
+
+        servicioExterno.interrupt();
+
+        scanner.close();
+    }
+
+    private static void mostrarMenu() {
+        System.out.println("BIENVENIDO A LA EXPOSICION CANINA");
+        System.out.println();
+        System.out.println("Menú:");
+        System.out.println();
+        System.out.println("1. Mostrar lista de perros ordenada por raza");
+        System.out.println("2. Mostrar lista de perros ordenada por puntos");
+        System.out.println("3. Mostrar lista de perros ordenada por edad");
+        System.out.println("4. Mostrar información de un perro específico");
+        System.out.println("5. Registrar un nuevo perro");
+        System.out.println("6. Localizar un perro por su nombre");
+        System.out.println("7. Buscar el perro ganador de la exposición");
+        System.out.println("8. Buscar el perro con el menor puntaje");
+        System.out.println("9. Buscar el perro más viejo");
+        System.out.println("0. Salir");
+        System.out.print("Ingrese una opción: ");
+    }
+
+    private static void procesarComando(String comando, Perro[] perros, int cantidad_Perros) {
+        switch (comando) {
+            case "mostrarListaPorRaza":
+                mostrarListaPorRaza(perros, cantidad_Perros);
+                break;
+            case "mostrarListaPorPuntos":
+                mostrarListaPorPuntos(perros, cantidad_Perros);
+                break;
+            case "mostrarListaPorEdad":
+                mostrarListaPorEdad(perros, cantidad_Perros);
+                break;
+        }
+    }
+
+    private static void mostrarListaPorRaza(Perro[] perros, int cantidad_Perros) {
+        if (cantidad_Perros > 0) {
+            Arrays.sort(perros, 0, cantidad_Perros, (a, b) -> a.raza.compareTo(b.raza));
+            System.out.println("Lista de perros ordenada por raza:");
+            for (int i = 0; i < cantidad_Perros; i++) {
+                System.out.println("Nombre: " + perros[i].nombre + ", Raza: " + perros[i].raza
+                        + ", Edad: " + perros[i].edad + " años, Puntos: " + perros[i].puntos + " puntos");
+            }
+        } else {
+            System.out.println("No hay perros registrados.");
+        }
+    }
+
+    private static void mostrarListaPorPuntos(Perro[] perros, int cantidad_Perros) {
+    }
+
+    private static void mostrarListaPorEdad(Perro[] perros, int cantidad_Perros) {
+    }
+
+    private static void mostrarInformacionPerro(Scanner scanner, Perro[] perros, int cantidad_Perros) {
+
+    }
+
+    private static void registrarNuevoPerro(Scanner scanner, Perro[] perros, int cantidad_Perros) {
+ 
+    }
+
+    private static void localizarPerroPorNombre(Scanner scanner, Perro[] perros, int cantidad_Perros) {
+
+    }
+
+    private static void buscarPerroGanador(Perro[] perros, int cantidad_Perros) {
+    }
+
+    private static void buscarPerroMenorPuntaje(Perro[] perros, int cantidad_Perros) {
+    }
+
+    private static void buscarPerroMasViejo(Perro[] perros, int cantidad_Perros) {
+    }
+
+    private static String obtenerComandoDesdeWebhook() {
+        return Math.random() < 0.33 ? "mostrarListaPorRaza" :
+                (Math.random() < 0.66 ? "mostrarListaPorPuntos" : "mostrarListaPorEdad");
+    }
+
+    private static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+}

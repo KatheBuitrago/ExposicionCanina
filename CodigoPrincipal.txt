@@ -1,0 +1,232 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class DogShow {
+    static final int MAXIMO_PERROS = 500;
+
+    static class Perro {
+        String nombre;
+        String raza;
+        int edad;
+        int puntos;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Perro[] perros = new Perro[MAXIMO_PERROS];
+        int cantidad_Perros = 0;
+        int opcion;
+
+        do {
+            System.out.println("BIENVENIDO A LA EXPOSICION CANINA");
+            System.out.println();
+            System.out.println("Menú:");
+            System.out.println();
+            System.out.println("1. Mostrar lista de perros ordenada por raza");
+            System.out.println("2. Mostrar lista de perros ordenada por puntos");
+            System.out.println("3. Mostrar lista de perros ordenada por edad");
+            System.out.println("4. Mostrar información de un perro específico");
+            System.out.println("5. Registrar un nuevo perro");
+            System.out.println("6. Localizar un perro por su nombre");
+            System.out.println("7. Buscar el perro ganador de la exposición");
+            System.out.println("8. Buscar el perro con el menor puntaje");
+            System.out.println("9. Buscar el perro más viejo");
+            System.out.println("0. Salir");
+            System.out.print("Ingrese una opción: ");
+            opcion = scanner.nextInt();
+            clearScreen();
+
+            switch (opcion) {
+                case 1:
+                    if (cantidad_Perros > 0) {
+                        Arrays.sort(perros, 0, cantidad_Perros, (a, b) -> a.raza.compareTo(b.raza));
+                        System.out.println("Lista de perros ordenada por raza:");
+                        for (int i = 0; i < cantidad_Perros; i++) {
+                            System.out.println("Nombre: " + perros[i].nombre + ", Raza: " + perros[i].raza
+                                    + ", Edad: " + perros[i].edad + " años, Puntos: " + perros[i].puntos + " puntos");
+                        }
+                    } else {
+                        System.out.println("No hay perros registrados.");
+                    }
+                    break;
+
+                case 2:
+                    if (cantidad_Perros > 0) {
+                        Arrays.sort(perros, 0, cantidad_Perros, (a, b) -> Integer.compare(b.puntos, a.puntos));
+                        System.out.println("Lista de perros ordenada por puntos:");
+                        for (int i = 0; i < cantidad_Perros; i++) {
+                            System.out.println("Nombre: " + perros[i].nombre + ", Raza: " + perros[i].raza
+                                    + ", Edad: " + perros[i].edad + " años, Puntos: " + perros[i].puntos + " puntos");
+                        }
+                    } else {
+                        System.out.println("No hay perros registrados.");
+                    }
+                    break;
+
+                case 3:
+                    if (cantidad_Perros > 0) {
+                        Arrays.sort(perros, 0, cantidad_Perros, (a, b) -> Integer.compare(a.edad, b.edad));
+                        System.out.println("Lista de perros ordenada por edad:");
+                        for (int i = 0; i < cantidad_Perros; i++) {
+                            System.out.println("Nombre: " + perros[i].nombre + ", Raza: " + perros[i].raza
+                                    + ", Edad: " + perros[i].edad + " años, Puntos: " + perros[i].puntos + " puntos");
+                        }
+                    } else {
+                        System.out.println("No hay perros registrados.");
+                    }
+                    break;
+
+                case 4:
+                    System.out.print("Ingrese el nombre del perro a buscar: ");
+                    String buscar_Nombre = scanner.next();
+                    boolean encontrado = false;
+                    for (int i = 0; i < cantidad_Perros; i++) {
+                        if (perros[i].nombre.equals(buscar_Nombre)) {
+                            System.out.println("Nombre: " + perros[i].nombre);
+                            System.out.println("Raza: " + perros[i].raza);
+                            System.out.println("Edad: " + perros[i].edad + " años");
+                            System.out.println("Puntos: " + perros[i].puntos + " puntos");
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    if (!encontrado) {
+                        System.out.println("No se encontró un perro con ese nombre.");
+                    }
+                    break;
+
+                case 5:
+                    if (cantidad_Perros < MAXIMO_PERROS) {
+                        String nombre, raza;
+                        int edad, puntos;
+
+                        System.out.print("Ingrese el nombre del perro: ");
+                        nombre = scanner.next();
+
+                        boolean nombreRepetido = false;
+                        for (int i = 0; i < cantidad_Perros; i++) {
+                            if (perros[i].nombre.equals(nombre)) {
+                                nombreRepetido = true;
+                                break;
+                            }
+                        }
+
+                        if (!nombreRepetido) {
+                            System.out.print("Ingrese la raza del perro: ");
+                            raza = scanner.next();
+                            System.out.print("Ingrese la edad del perro: ");
+                            edad = scanner.nextInt();
+                            System.out.print("Ingrese los puntos del perro: ");
+                            puntos = scanner.nextInt();
+
+                            perros[cantidad_Perros] = new Perro();
+                            perros[cantidad_Perros].nombre = nombre;
+                            perros[cantidad_Perros].raza = raza;
+                            perros[cantidad_Perros].edad = edad;
+                            perros[cantidad_Perros].puntos = puntos;
+
+                            cantidad_Perros++;
+                            System.out.println("Perro registrado con éxito.");
+                        } else {
+                            System.out.println("Ya existe un perro registrado con ese nombre. Intente con otro nombre.");
+                        }
+                    } else {
+                        System.out.println("Se ha alcanzado el número máximo de perros registrados.");
+                    }
+                    break;
+
+                case 6:
+                    System.out.print("Ingrese el nombre del perro a buscar: ");
+                    buscar_Nombre = scanner.next();
+                    encontrado = false;
+                    for (int i = 0; i < cantidad_Perros; i++) {
+                        if (perros[i].nombre.equals(buscar_Nombre)) {
+                            System.out.println("Nombre: " + perros[i].nombre);
+                            System.out.println("Raza: " + perros[i].raza);
+                            System.out.println("Edad: " + perros[i].edad + " años");
+                            System.out.println("Puntos: " + perros[i].puntos + " puntos");
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    if (!encontrado) {
+                        System.out.println("No se encontró un perro con ese nombre.");
+                    }
+                    break;
+
+                case 7:
+                    if (cantidad_Perros > 0) {
+                        Perro perroGanador = perros[0];
+
+                        for (int i = 1; i < cantidad_Perros; i++) {
+                            if (perros[i].puntos > perroGanador.puntos) {
+                                perroGanador = perros[i];
+                            }
+                        }
+
+                        System.out.println("El perro ganador de la exposición es:");
+                        System.out.println("Nombre: " + perroGanador.nombre);
+                        System.out.println("Raza: " + perroGanador.raza);
+                        System.out.println("Edad: " + perroGanador.edad + " años");
+                        System.out.println("Puntos: " + perroGanador.puntos + " puntos");
+                    } else {
+                        System.out.println("No hay perros registrados.");
+                    }
+                    break;
+
+                case 8:
+                    if (cantidad_Perros > 0) {
+                        Perro perroMenorPuntaje = perros[0];
+                        for (int i = 1; i < cantidad_Perros; i++) {
+                            if (perros[i].puntos < perroMenorPuntaje.puntos) {
+                                perroMenorPuntaje = perros[i];
+                            }
+                        }
+                        System.out.println("El perro con el menor puntaje es:");
+                        System.out.println("Nombre: " + perroMenorPuntaje.nombre);
+                        System.out.println("Raza: " + perroMenorPuntaje.raza);
+                        System.out.println("Edad: " + perroMenorPuntaje.edad + " años");
+                        System.out.println("Puntos: " + perroMenorPuntaje.puntos + " puntos");
+                    } else {
+                        System.out.println("No hay perros registrados.");
+                    }
+                    break;
+
+                case 9:
+                    if (cantidad_Perros > 0) {
+                        Perro perroMasViejo = perros[0];
+                        for (int i = 1; i < cantidad_Perros; i++) {
+                            if (perros[i].edad > perroMasViejo.edad) {
+                                perroMasViejo = perros[i];
+                            }
+                        }
+                        System.out.println("El perro más viejo es:");
+                        System.out.println("Nombre: " + perroMasViejo.nombre);
+                        System.out.println("Raza: " + perroMasViejo.raza);
+                        System.out.println("Edad: " + perroMasViejo.edad + " años");
+                        System.out.println("Puntos: " + perroMasViejo.puntos + " puntos");
+                    } else {
+                        System.out.println("No hay perros registrados.");
+                    }
+                    break;
+
+                case 0:
+                    System.out.println("Saliendo del programa");
+                    break;
+
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+
+            System.out.println();
+
+        } while (opcion != 0);
+
+        scanner.close();
+    }
+
+    private static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+}
